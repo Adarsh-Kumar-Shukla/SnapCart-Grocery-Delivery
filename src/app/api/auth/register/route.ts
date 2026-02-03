@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
      
   } catch (error) {
     NextResponse.json(
-      {massage:`register error ${error}`},
+      {message:`register error ${error}`},
       {status:500}
     )
   }
