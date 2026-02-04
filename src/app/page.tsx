@@ -1,6 +1,24 @@
 import React from 'react'
+import { auth } from '@/auth'
+import connectDb from '@/lib/db'
+import User from '@/models/user.model'
+import { redirect } from 'next/navigation'
+import EditRoleMobile from '@/components/EditRoleMobile'
 
-const page = () => {
+const page = async () => {
+  await connectDb()
+  const session = await auth()
+  const user = await User.findById(session?.user?.id)
+  if(!user){
+    redirect("/login")
+  }
+
+  const isComplete = !user.mobile || !user.role || (!user.mobile && user.role == "user")
+
+  if(isComplete){
+    return <EditRoleMobile/>
+  }
+
   return (
     <div>
       home
