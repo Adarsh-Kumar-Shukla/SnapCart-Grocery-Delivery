@@ -1,31 +1,42 @@
-import React from 'react'
-import { auth } from '@/auth'
-import connectDb from '@/lib/db'
-import User from '@/models/user.model'
-import { redirect } from 'next/navigation'
-import EditRoleMobile from '@/components/EditRoleMobile'
-import Nav from '@/components/Nav'
+import React from "react";
+import { auth } from "@/auth";
+import connectDb from "@/lib/db";
+import User from "@/models/user.model";
+import { redirect } from "next/navigation";
+import EditRoleMobile from "@/components/EditRoleMobile";
+import Nav from "@/components/Nav";
+import UserDashboard from "@/components/UserDashboard";
+import AdminDashboard from "@/components/AdminDashboard";
+import DeliveryBoy from "@/components/DeliveryBoy";
 
 const page = async () => {
-  await connectDb()
-  const session = await auth()
-  const user = await User.findById(session?.user?.id)
-  if(!user){
-    redirect("/login")
+  await connectDb();
+  const session = await auth();
+  const user = await User.findById(session?.user?.id);
+  if (!user) {
+    redirect("/login");
   }
 
-  const isComplete = !user.mobile || !user.role || (!user.mobile && user.role == "user")
+  const isComplete =
+    !user.mobile || !user.role || (!user.mobile && user.role == "user");
 
-  if(isComplete){
-    return <EditRoleMobile/>
+  if (isComplete) {
+    return <EditRoleMobile />;
   }
 
-  const plainUser = JSON.parse(JSON.stringify(user))
+  const plainUser = JSON.parse(JSON.stringify(user));
   return (
     <>
-      <Nav user={plainUser}/>
+      <Nav user={plainUser} />
+      {user.role == "user" ? (
+        <UserDashboard />
+      ) : user.role == "admin" ? (
+        <AdminDashboard />
+      ) : (
+        <DeliveryBoy />
+      )}
     </>
-  )
-}
+  );
+};
 
-export default page
+export default page;
