@@ -75,7 +75,7 @@ const EditRoleMobile = () => {
         }}
         transition={{
           duration: 0.6,
-          delay: 0.5,
+          delay: 0.7,
         }}
         className="flex flex-col items-center mt-10"
       >
@@ -109,7 +109,7 @@ const EditRoleMobile = () => {
           ? "bg-green-600 hover:bg-green-700 text-white"
           : "bg-gray-300 text-gray-500 cursor-not allowed"
           }`}
-          onClick={handleEdit}
+          onClick={()=>handleEdit}
       >
         Go To Home
         <ArrowRight/>

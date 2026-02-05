@@ -4,6 +4,7 @@ import connectDb from '@/lib/db'
 import User from '@/models/user.model'
 import { redirect } from 'next/navigation'
 import EditRoleMobile from '@/components/EditRoleMobile'
+import Nav from '@/components/Nav'
 
 const page = async () => {
   await connectDb()
@@ -19,10 +20,11 @@ const page = async () => {
     return <EditRoleMobile/>
   }
 
+  const plainUser = JSON.parse(JSON.stringify(user))
   return (
-    <div>
-      home
-    </div>
+    <>
+      <Nav user={plainUser}/>
+    </>
   )
 }
 
