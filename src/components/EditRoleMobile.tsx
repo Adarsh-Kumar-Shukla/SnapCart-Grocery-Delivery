@@ -1,11 +1,13 @@
 "use client";
 import React, { useState } from "react";
 import { motion } from "motion/react";
-import { ArrowRight, Bike, User, UserCog } from "lucide-react";
+import { ArrowRight, Bike, Loader2, User, UserCog } from "lucide-react";
 import axios from "axios";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const EditRoleMobile = () => {
+  const [loading,setLoading] = useState(false)
   const [role, setRole] = useState([
     { id: "admin", label: "Admin", icon: UserCog },
     { id: "user", label: "User", icon: User },
@@ -13,15 +15,21 @@ const EditRoleMobile = () => {
   ]);
   const [selectedRole, setSelectedrole] = useState("");
   const [mobile, setMobile] = useState("");
+  const router = useRouter()
+  const { update } = useSession()
   const handleEdit = async () => {
+    setLoading(true)
     try {
       const result = await axios.post("/api/user/edit-role-mobile",{
         role:selectedRole,
         mobile
       })
-      redirect("/")
+      await update({role:selectedRole})
+      setLoading(false)
+      router.push("/")
     } catch (error) {
       console.log(error)
+      setLoading(false)
     }
   }
   return (
@@ -109,10 +117,10 @@ const EditRoleMobile = () => {
           ? "bg-green-600 hover:bg-green-700 text-white"
           : "bg-gray-300 text-gray-500 cursor-not allowed"
           }`}
-          onClick={()=>handleEdit}
+          onClick={()=>handleEdit()}
       >
-        Go To Home
-        <ArrowRight/>
+        {loading ? <Loader2 className="w-5 h-5 animate-spin"/> : "Go To Home"}
+        {loading ? "" :<ArrowRight/>}
       </motion.button>
     </div>
   );
